@@ -8,10 +8,15 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Users {
+public class Products {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer u_id;
-    private String email;
-    private String passcode;
+    private Integer p_id;
+    private String p_name;
+    private String p_qty;
+    private Integer p_price;
+    private Integer p_stock_qty;
+    private String p_img;
+    private Integer c_id;
+    private Integer stock_available;
 }

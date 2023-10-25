@@ -15,5 +15,9 @@ public class AuthService {
     public List<Users> getAuthToken() {
         return usersDao.findAll();
     }
+    
+    public Boolean checkUserExists(Users user) {
+        return true;
+    }
 
 }

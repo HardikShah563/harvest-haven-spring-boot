@@ -23,19 +23,31 @@ export default function SignIn() {
     const [msg, setMsg] = useState("");
     const [color, setColor] = useState("");
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
-        if (formData.email === "" || formData.passcode === "") {
-            setMsg("Fill the required details");
-            setColor("red");
+        // if (formData.email.length < 5 || formData.passcode == "") {
+        //     setMsg("Enter proper credentials");
+        //     setColor("red");
+        // }
+        // let response = await fetch('http://localhost:8080/users/signin');
+        try {
+            let response = await fetch('http://localhost:8080/users/signin', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: formData.email,
+                    passcode: formData.passcode
+                })
+            })
+            console.log(response);
         }
-        // inside else if, check custom email validations
-        else {
-            setMsg("Sign In successful");
-            setColor("green");
-
+        catch(err) {
+            console.log(err);
         }
-        // pass the states into db
+        // console.log(response);
     }
 
     return (
@@ -59,7 +71,7 @@ export default function SignIn() {
                             <h1 class="title">Welcome Back</h1>
                             <h1 class="subtitle">** Enter your details to purchase delicious goods **</h1>
 
-                            <form action="{{ url_for('signin') }}" method="post">
+                            <form onSubmit={handleSubmit}>
                                 <div class="input-box">
                                     <div class="input msg" id={color}>
                                         {msg}
@@ -106,15 +118,14 @@ export default function SignIn() {
 
                                 <div class="input-box">
                                     <button
-                                        class="form-btn"
-                                        type="submit">
+                                        class="form-btn">
                                         Sign In
                                     </button>
                                 </div>
                             </form>
 
                             <div class="below-form flex">
-                                <span class="flex gap-5">Don't have an account? <div onClick={() => {navigate("/signup")}}>Sign Up</div></span>
+                                <span class="flex gap-5">Don't have an account? <div onClick={() => { navigate("/signup") }}>Sign Up</div></span>
                             </div>
                         </div>
                     </div>
