@@ -44,25 +44,12 @@ export default function Checkout() {
             });
     }, []);
 
-    const products = [{
-        name: "EGGS",
-        qty: "6 pieces",
-        price: 59.99,
-        type: "packaged",
-        url: "eggs6"
-    }, {
-        name: "PASTA",
-        qty: "100g",
-        price: 24.99,
-        type: "packaged",
-        url: "pasta"
-    }, {
-        name: "CEREALS",
-        qty: "250g",
-        price: 63.49,
-        type: "packaged",
-        url: "cereals"
-    }];
+    let subTotal = 0;
+    cart.map((prod) => {
+        subTotal += prod.quantity * prod.prodPrice;
+    });
+    let tax = 0.09 * subTotal;
+    console.log(cart);
 
     return (
         <>
@@ -315,20 +302,20 @@ export default function Checkout() {
                     <hr />
                     <div class="checkout-total flex">
                         <h1 class="subtitle">Subtotal&emsp;&nbsp;: </h1>
-                        <h1 class="subtitle">₹00.00</h1>
+                        <h1 class="subtitle">₹{subTotal}</h1>
                     </div>
                     <div class="checkout-total flex">
                         <h1 class="subtitle">CGST (9%)&nbsp;&nbsp;&nbsp;: </h1>
-                        <h1 class="subtitle">₹00.00</h1>
+                        <h1 class="subtitle">₹{tax}</h1>
                     </div>
                     <div class="checkout-total flex">
                         <h1 class="subtitle">SGST (9%)&nbsp;&nbsp;&nbsp;: </h1>
-                        <h1 class="subtitle">₹00.00</h1>
+                        <h1 class="subtitle">₹{tax}</h1>
                     </div>
                     <hr />
                     <div class="checkout-total flex">
                         <h1 class="title">Grand Total: </h1>
-                        <h1 class="title">₹00.00</h1>
+                        <h1 class="title">₹{subTotal + (2 * tax)}</h1>
                     </div>
                 </div>
             </div>

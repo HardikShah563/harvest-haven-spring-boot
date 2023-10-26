@@ -1,14 +1,28 @@
 // importing from react
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // importing icons
 import { BiPlus, BiMinus } from "react-icons/bi";
 
 export default function Product(props) {
     const [qty, setQty] = useState(0);
 
-    function reduceQty() {
+    useEffect(() => {
+        props.page === "cart" && setQty(props.prodQuantity);
+        props.page === "checkout" && setQty(props.prodQuantity);
+    }, [])
+
+    async function reduceQty() {
         if (qty > 0) {
-            setQty(prevQty => --prevQty);
+            const response = await fetch('http://localhost:8080/cart/remove', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ...props, quantity: 1 })
+            })
+            console.log({ ...props, quantity: 1 });
+            if (response)
+                setQty(prevQty => --prevQty);
         }
     }
 
@@ -56,17 +70,7 @@ export default function Product(props) {
                         </div>
                     )}
 
-                    {props.page == "cart" && (
-                        <div class="qty">{props.prodQuantity}</div>
-                    )}
-
-                    {props.page == "checkout" && (
-                        <div class="qty">{props.prodQuantity}</div>
-                    )}
-
-                    {!props.page && (
-                        <div class="qty">{qty}</div>
-                    )}
+                    <div class="qty">{qty}</div>
 
                     {props.page != "checkout" && (
                         <div class="plus" onClick={increaseQty}>
