@@ -7,7 +7,24 @@ import "../style/form.css";
 import Product from "../components/Product";
 
 export default function Checkout() {
+    const [cart, setCart] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/cart/all')
+            .then(response => response.json())
+            .then(data => {
+                setCart(data);
+            });
+    }, []);
+
+    let subTotal = 0;
+    cart.map((prod) => {
+        subTotal += prod.quantity * prod.prodPrice;
+    });
+    let tax = 0.09 * subTotal;
+
     const [msg, setMsg] = useState("");
+    const [color, setColor] = useState("");
 
     const [formData, setFormData] = useState({
         name: "",
@@ -30,26 +47,37 @@ export default function Checkout() {
         }))
     }
 
-    function handleSubmit() {
+    async function handleSubmit(event) {
+        event.preventDefault();
+        const addr = formData.address + ", " + formData.city + ", " + formData.state + ", " + formData.zip;
+        let purchase = "";
+        let totalOrderQty = 0;
+        cart.map((prod) => {
+            purchase = purchase + prod.prodName + " : " + prod.quantity + ", ";
+            totalOrderQty += prod.quantity;
+        })
+
         // pass the states into db
+        const response = await fetch('http://localhost:8080/orders/place', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "o_id": 1,
+                "u_id": 1,
+                "addr": "",
+                "order_total": subTotal + (2 * tax),
+                "purchase": purchase,
+                "total_order_qty": totalOrderQty
+            })
+        });
+        setMsg(response);
+        if(msg == "Order Placed") 
+            setColor("green");
+        else
+            setColor("red");
     }
-
-    const [cart, setCart] = useState([]);
-
-    useEffect(() => {
-        fetch('http://localhost:8080/cart/all')
-            .then(response => response.json())
-            .then(data => {
-                setCart(data);
-            });
-    }, []);
-
-    let subTotal = 0;
-    cart.map((prod) => {
-        subTotal += prod.quantity * prod.prodPrice;
-    });
-    let tax = 0.09 * subTotal;
-    console.log(cart);
 
     return (
         <>
@@ -58,7 +86,7 @@ export default function Checkout() {
                     <div className="form">
                         <h1 class="title">Checkout With Your Purchase</h1>
                         <h1 class="subtitle">** Enter authentic details to complete the purchase **</h1>
-                        <form action="?" method="post">
+                        <form onSubmit={handleSubmit}>
                             <div class="input-box">
                                 <div class="input msg" id="{{msgColor}}">
                                     {msg}
@@ -76,8 +104,8 @@ export default function Checkout() {
                                 <input
                                     class="input"
                                     type="text"
-                                    name="fullname"
-                                    id="fullname"
+                                    name="name"
+                                    id="name"
                                     value={formData.name}
                                     onChange={handleChange}
                                     placeholder="Eg: Hardik Shah"
@@ -268,8 +296,7 @@ export default function Checkout() {
                             <div class="input-box">
                                 <button
                                     class="form-btn"
-                                    type="submit"
-                                    onSubmit={handleSubmit}>
+                                    type="submit">
                                     Complete Purchase
                                 </button>
                             </div>

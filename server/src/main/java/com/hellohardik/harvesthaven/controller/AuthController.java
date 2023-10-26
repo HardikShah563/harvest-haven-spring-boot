@@ -34,6 +34,6 @@ public class AuthController {
         if(auth.checkUserExists(user)) {
             return new ResponseEntity<>("Login Successful!", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Login Successful!", HttpStatus.OK);
+        return new ResponseEntity<>("Login Unsuccessful!", HttpStatus.OK);
     }
 }

@@ -19,17 +19,14 @@ public class CartService {
 
         for(Product item : items) {
             if(item.getProdId() == product.getProdId()) {
-                // System.out.println(product);
                 item.setQuantity(item.getQuantity() + 1);
                 productExists = true;
-                // displayCart();
                 return(true);
             }
         }
         if(!productExists) {
             product.setQuantity(1);
             items.add(product);
-            // displayCart();
             return(true);
         }
         return false;
