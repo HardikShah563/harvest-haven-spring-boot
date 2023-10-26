@@ -7,13 +7,22 @@ export default function Product(props) {
     const [qty, setQty] = useState(0);
 
     function reduceQty() {
-        if(qty > 0) {
+        if (qty > 0) {
             setQty(prevQty => --prevQty);
         }
     }
 
-    function increaseQty() {
-        setQty(prevQty => ++prevQty);
+    async function increaseQty() {
+        const response = await fetch('http://localhost:8080/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ ...props, quantity: 1 })
+        })
+        console.log({ ...props, quantity: 1 });
+        if (response)
+            setQty(prevQty => ++prevQty);
     }
 
     return (
@@ -41,13 +50,25 @@ export default function Product(props) {
                 </div>
 
                 <div class="quantity">
-                    {props.page != "cart" && (
+                    {props.page != "checkout" && (
                         <div class="minus" onClick={reduceQty}>
                             <BiMinus size={20} />
                         </div>
                     )}
-                    <div class="qty">{qty}</div>
-                    {props.page != "cart" && (
+
+                    {props.page == "cart" && (
+                        <div class="qty">{props.prodQuantity}</div>
+                    )}
+
+                    {props.page == "checkout" && (
+                        <div class="qty">{props.prodQuantity}</div>
+                    )}
+
+                    {!props.page && (
+                        <div class="qty">{qty}</div>
+                    )}
+
+                    {props.page != "checkout" && (
                         <div class="plus" onClick={increaseQty}>
                             <BiPlus size={20} />
                         </div>

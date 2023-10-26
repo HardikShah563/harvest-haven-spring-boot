@@ -1,5 +1,5 @@
 // importing from react
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // importing stylesheets
 import "../style/checkout.css";
 import "../style/shop.css";
@@ -33,6 +33,16 @@ export default function Checkout() {
     function handleSubmit() {
         // pass the states into db
     }
+
+    const [cart, setCart] = useState([]);
+
+    useEffect(() => {
+        fetch('http://localhost:8080/cart/all')
+            .then(response => response.json())
+            .then(data => {
+                setCart(data);
+            });
+    }, []);
 
     const products = [{
         name: "EGGS",
@@ -284,14 +294,19 @@ export default function Checkout() {
                     <h1 class="title">Cart Items</h1>
 
                     <div class="store" id="cart-items">
-                        {products.map(prod => (
+                        {cart.map(prod => (
                             <>
                                 <Product
-                                    prodURL={prod.url}
-                                    prodName={prod.name}
-                                    prodQty={prod.qty}
-                                    prodPrice={prod.price}
-                                    page={"cart"}
+                                    prodId={prod.prodId}
+                                    prodName={prod.prodName}
+                                    prodQty={prod.prodQty}
+                                    prodPrice={prod.prodPrice}
+                                    prodType={prod.prodType}
+                                    prodURL={prod.prodURL}
+                                    prodStock={prod.prodStock}
+                                    prodStockAv={prod.prodStockAv}
+                                    prodQuantity={prod.quantity}
+                                    page={"checkout"}
                                 />
                             </>
                         ))}
