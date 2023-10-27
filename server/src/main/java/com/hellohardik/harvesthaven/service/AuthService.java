@@ -20,4 +20,8 @@ public class AuthService {
         return true;
     }
 
+    public List<Users> getAllUsers() {
+        return usersDao.findAll();
+    }
+
 }

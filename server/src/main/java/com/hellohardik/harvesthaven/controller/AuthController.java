@@ -36,4 +36,10 @@ public class AuthController {
         }
         return new ResponseEntity<>("Login Unsuccessful!", HttpStatus.OK);
     }
+
+    @CrossOrigin
+    @GetMapping("all")
+    public List<Users> getUsers() {
+        return auth.getAllUsers();
+    }
 }

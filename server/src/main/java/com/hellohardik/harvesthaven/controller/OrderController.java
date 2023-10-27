@@ -1,9 +1,10 @@
 package com.hellohardik.harvesthaven.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,10 +22,16 @@ public class OrderController {
     
     @CrossOrigin
     @PostMapping("place")
-    public String placeOrder(@RequestBody Orders order) {
+    public Boolean placeOrder(@RequestBody Orders order) {
         if(orderservice.placeOrders(order)) {
-            return "Order Placed";
+            return true;
         }
-        return "Could Not Place Order";
+        return false;
+    }
+
+    @CrossOrigin
+    @GetMapping("all")
+    public List<Orders> getOrders() {
+        return orderservice.getAllOrders();
     }
 }
